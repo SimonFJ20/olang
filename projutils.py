@@ -1,6 +1,3 @@
-
-
-
 from os import system
 
 
@@ -13,9 +10,14 @@ def test(f):
 def run_tests():
     global TESTS
     for i in TESTS:
-        i()
+        try:
+            i()
+        except AssertionError as e:
+            system('clear')
+            raise e
     system('clear')
-    print('\n\nall tests passed')
+    print(f'{len(TESTS)} TESTS PASSED')
+
 
 IOTA_COUNT = 0
 def iota(reset: bool = False):

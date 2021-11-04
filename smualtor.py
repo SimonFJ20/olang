@@ -14,7 +14,7 @@ def simulate(ops: List[Op], stack: Stack = Stack(), strings: List[str] = []):
             stack.pop()
         elif o.t == OT.PRINT_INT:
             v = stack.pop()
-            print(v, end="")
+            print(v, end='', flush=True)
         elif o.t == OT.PUSH_STR:
             v = ops[i].v
             strings.append(v)
@@ -27,7 +27,7 @@ def simulate(ops: List[Op], stack: Stack = Stack(), strings: List[str] = []):
         elif o.t == OT.PRINT_STR:
             stack.pop()
             stack.pop()
-            print(strings.pop(), end="")  
+            print(strings.pop(), end='', flush=True)  
         elif o.t == OT.DUP:
             v = stack.pop()
             stack.push(v)

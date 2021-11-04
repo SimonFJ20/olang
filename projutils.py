@@ -14,9 +14,10 @@ def run_tests():
             i()
         except AssertionError as e:
             system('clear')
+            print('❌ TEST FAILED ❌')
             raise e
     system('clear')
-    print(f'{len(TESTS)} TESTS PASSED')
+    print(f'💪 {len(TESTS)} TESTS PASSED 💪')
 
 
 IOTA_COUNT = 0

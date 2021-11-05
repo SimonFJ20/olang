@@ -1,6 +1,6 @@
 
-5
-while dup do
+0
+while dup 5 < do
     "should print five times\n" print_str
-    1 -
+    1 +
 end

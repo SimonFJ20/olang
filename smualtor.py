@@ -57,6 +57,18 @@ def simulate(ops: List[Op], stack: Stack = Stack(), strings: List[str] = []):
         elif o.t == OT.END:
             if o.v:
                 i = o.v
+        elif o.t == OT.CMP_EE:
+            stack.push(1 if stack.pop() == stack.pop() else 0)
+        elif o.t == OT.CMP_NE:
+            stack.push(1 if stack.pop() != stack.pop() else 0)
+        elif o.t == OT.CMP_LT:
+            stack.push(1 if stack.pop() > stack.pop() else 0)
+        elif o.t == OT.CMP_GT:
+            stack.push(1 if stack.pop() < stack.pop() else 0)
+        elif o.t == OT.CMP_LTE:
+            stack.push(1 if stack.pop() >= stack.pop() else 0)
+        elif o.t == OT.CMP_GTE:
+            stack.push(1 if stack.pop() <= stack.pop() else 0)
         i += 1
 
 @test
@@ -208,3 +220,129 @@ def it_should_print_five_times():
         Op(OT.END, 1),
     ], s)
     assert s.pop() == 0
+
+@test
+def it_should_pop_two_and_push_one():
+    correct = True
+    for i in [OT.CMP_EE, OT.CMP_NE, OT.CMP_LT, OT.CMP_GT, OT.CMP_LTE, OT.CMP_GTE]:
+        s = Stack()
+        simulate([
+            Op(OT.PUSH_INT, 69),
+            Op(OT.PUSH_INT, 0),
+            Op(OT.PUSH_INT, 1),
+            Op(i),
+        ], s)
+        s.pop()
+        if s.pop() != 69:
+            correct = False
+    assert correct
+
+# ==
+
+@test
+def it_should_be_false():
+    s = Stack()
+    simulate([Op(OT.PUSH_INT, 4), Op(OT.PUSH_INT, 8), Op(OT.CMP_EE)], s)
+    assert s.pop() == 0
+
+@test
+def it_should_be_true():
+    s = Stack()
+    simulate([Op(OT.PUSH_INT, 8), Op(OT.PUSH_INT, 8), Op(OT.CMP_EE)], s)
+    assert s.pop() == 1
+
+# !=
+
+@test
+def it_should_be_false():
+    s = Stack()
+    simulate([Op(OT.PUSH_INT, 8), Op(OT.PUSH_INT, 8), Op(OT.CMP_NE)], s)
+    assert s.pop() == 0
+
+@test
+def it_should_be_true():
+    s = Stack()
+    simulate([Op(OT.PUSH_INT, 4), Op(OT.PUSH_INT, 8), Op(OT.CMP_NE)], s)
+    assert s.pop() == 1
+
+# <
+
+@test
+def it_should_be_false():
+    s = Stack()
+    simulate([Op(OT.PUSH_INT, 8), Op(OT.PUSH_INT, 4), Op(OT.CMP_LT)], s)
+    assert s.pop() == 0
+
+@test
+def it_should_be_false():
+    s = Stack()
+    simulate([Op(OT.PUSH_INT, 4), Op(OT.PUSH_INT, 4), Op(OT.CMP_LT)], s)
+    assert s.pop() == 0
+
+@test
+def it_should_be_true():
+    s = Stack()
+    simulate([Op(OT.PUSH_INT, 4), Op(OT.PUSH_INT, 8), Op(OT.CMP_LT)], s)
+    assert s.pop() == 1
+
+# >
+
+@test
+def it_should_be_false():
+    s = Stack()
+    simulate([Op(OT.PUSH_INT, 4), Op(OT.PUSH_INT, 8), Op(OT.CMP_GT)], s)
+    assert s.pop() == 0
+
+@test
+def it_should_be_false():
+    s = Stack()
+    simulate([Op(OT.PUSH_INT, 4), Op(OT.PUSH_INT, 4), Op(OT.CMP_GT)], s)
+    assert s.pop() == 0
+
+@test
+def it_should_be_true():
+    s = Stack()
+    simulate([Op(OT.PUSH_INT, 8), Op(OT.PUSH_INT, 4), Op(OT.CMP_GT)], s)
+    assert s.pop() == 1
+
+# <=
+
+@test
+def it_should_be_false():
+    s = Stack()
+    simulate([Op(OT.PUSH_INT, 8), Op(OT.PUSH_INT, 4), Op(OT.CMP_LTE)], s)
+    assert s.pop() == 0
+
+@test
+def it_should_be_true():
+    s = Stack()
+    simulate([Op(OT.PUSH_INT, 4), Op(OT.PUSH_INT, 4), Op(OT.CMP_LTE)], s)
+    assert s.pop() == 1
+
+@test
+def it_should_be_true():
+    s = Stack()
+    simulate([Op(OT.PUSH_INT, 4), Op(OT.PUSH_INT, 8), Op(OT.CMP_LTE)], s)
+    assert s.pop() == 1
+
+# >=
+
+@test
+def it_should_be_false():
+    s = Stack()
+    simulate([Op(OT.PUSH_INT, 4), Op(OT.PUSH_INT, 8), Op(OT.CMP_GTE)], s)
+    assert s.pop() == 0
+
+@test
+def it_should_be_true():
+    s = Stack()
+    simulate([Op(OT.PUSH_INT, 4), Op(OT.PUSH_INT, 4), Op(OT.CMP_GTE)], s)
+    assert s.pop() == 1
+
+@test
+def it_should_be_true():
+    s = Stack()
+    simulate([Op(OT.PUSH_INT, 8), Op(OT.PUSH_INT, 4), Op(OT.CMP_GTE)], s)
+    assert s.pop() == 1
+
+

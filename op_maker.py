@@ -20,6 +20,12 @@ class OT(Enum):
     WHILE       = iota()
     DO          = iota()
     END         = iota()
+    CMP_EE      = iota()
+    CMP_NE      = iota()
+    CMP_LT      = iota()
+    CMP_GT      = iota()
+    CMP_LTE     = iota()
+    CMP_GTE     = iota()
 
 class Op:
     def __init__(self, t: OT, v = None):
@@ -75,6 +81,18 @@ def parse(words: List[str]) -> List[Op]:
             ops.append(Op(OT.DO))
         elif w == 'end':
             ops.append(Op(OT.END))
+        elif w == '==':
+            ops.append(Op(OT.CMP_EE))
+        elif w == '!=':
+            ops.append(Op(OT.CMP_NE))
+        elif w == '<':
+            ops.append(Op(OT.CMP_LT))
+        elif w == '>':
+            ops.append(Op(OT.CMP_GT))
+        elif w == '<=':
+            ops.append(Op(OT.CMP_LTE))
+        elif w == '>=':
+            ops.append(Op(OT.CMP_GTE))
         else:
             raise Exception(f'unrecognized operation: "{w}"')
     return ops
@@ -155,4 +173,28 @@ def should_return_do_op():
 @test
 def should_return_end_op():
     assert parse(['end'])[0].t == OT.END
+
+@test
+def should_return_e_op():
+    assert parse(['=='])[0].t == OT.CMP_EE
+
+@test
+def should_return_ne_op():
+    assert parse(['!='])[0].t == OT.CMP_NE
+
+@test
+def should_return_lt_op():
+    assert parse(['<'])[0].t == OT.CMP_LT
+
+@test
+def should_return_gt_op():
+    assert parse(['>'])[0].t == OT.CMP_GT
+
+@test
+def should_return_lte_op():
+    assert parse(['<='])[0].t == OT.CMP_LTE
+
+@test
+def should_return_gte_op():
+    assert parse(['>='])[0].t == OT.CMP_GTE
 

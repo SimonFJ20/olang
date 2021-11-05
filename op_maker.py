@@ -13,19 +13,21 @@ class OT(Enum):
     PRINT_STR   = iota()    # print_str
     DUP         = iota()    # dup
     SWAP        = iota()    # swap
+    OVER        = iota()    # over
+    ROT         = iota()    # rot
     ADD         = iota()    # +
     SUB         = iota()    # -
-    IF          = iota()
-    ELSE        = iota()
-    WHILE       = iota()
-    DO          = iota()
-    END         = iota()
-    CMP_EE      = iota()
-    CMP_NE      = iota()
-    CMP_LT      = iota()
-    CMP_GT      = iota()
-    CMP_LTE     = iota()
-    CMP_GTE     = iota()
+    IF          = iota()    # if
+    ELSE        = iota()    # else
+    WHILE       = iota()    # while
+    DO          = iota()    # do
+    END         = iota()    # end
+    CMP_EE      = iota()    # ==
+    CMP_NE      = iota()    # !=
+    CMP_LT      = iota()    # <
+    CMP_GT      = iota()    # >
+    CMP_LTE     = iota()    # <=
+    CMP_GTE     = iota()    # >=
 
 class Op:
     def __init__(self, t: OT, v = None):
@@ -67,6 +69,10 @@ def parse(words: List[str]) -> List[Op]:
             ops.append(Op(OT.DUP))
         elif w == 'swap':
             ops.append(Op(OT.SWAP))
+        elif w == 'over':
+            ops.append(Op(OT.OVER))
+        elif w == 'rot':
+            ops.append(Op(OT.ROT))
         elif w == '+':
             ops.append(Op(OT.ADD))
         elif w == '-':

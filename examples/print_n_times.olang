@@ -1,0 +1,9 @@
+
+0
+
+while dup 8 - do
+    "printed " print_str
+    dup 1 + print_int
+    " times\n" print_str
+    1 +
+end

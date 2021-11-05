@@ -1,4 +1,5 @@
 from sys import argv
+from crosrefs import cross_reference
 from op_maker import parse
 from projutils import run_tests
 from smualtor import simulate
@@ -15,5 +16,6 @@ if __name__ == '__main__':
         f.close()
         words = chop_words(program)
         ops = parse(words)
+        cross_reference(ops)
         simulate(ops)
 

@@ -1,8 +1,7 @@
 from typing import List
 from op_maker import Op, OT
-from projutils import iota, test
+from projutils import test
 from stack import Stack
-from enum import Enum
 
 def simulate(ops: List[Op], stack: Stack = Stack(), strings: List[str] = []):
     i = 0
@@ -47,23 +46,17 @@ def simulate(ops: List[Op], stack: Stack = Stack(), strings: List[str] = []):
             stack.push(v2 - v1)
         elif o.t == OT.IF:
             if not stack.pop():
-                depth = 0
-                while not (ops[i].t in [OT.ELSE, OT.END] and depth == 0):
-                    i += 1
-                    if ops[i].v in [OT.IF, OT.WHILE]:
-                        depth += 1
-                    elif ops[i].v == OT.END:
-                        depth -= 1
+                i = o.v
         elif o.t == OT.ELSE:
-            depth = 0
-            while not (ops[i].t == OT.END and depth == 0):
-                i += 1
-                if ops[i].v in [OT.IF, OT.WHILE]:
-                        depth += 1
-                elif ops[i].v == OT.END:
-                    depth -= 1
-        elif o.t == OT.END:
+            i = o.v
+        elif o.t == OT.WHILE:
             pass
+        elif o.t == OT.DO:
+            if not stack.pop():
+                i = o.v
+        elif o.t == OT.END:
+            if o.v:
+                i = o.v
         i += 1
 
 @test
@@ -179,9 +172,9 @@ def it_should_execute_if_correctly():
     s = Stack()
     simulate([
         Op(OT.PUSH_INT, 1),
-        Op(OT.IF),
+        Op(OT.IF, 3),
         Op(OT.PUSH_INT, 2),
-        Op(OT.ELSE),
+        Op(OT.ELSE, 5),
         Op(OT.PUSH_INT, 3),
         Op(OT.END),
     ], s)
@@ -192,28 +185,26 @@ def it_should_execute_if_correctly():
     s = Stack()
     simulate([
         Op(OT.PUSH_INT, 0),
-        Op(OT.IF),
+        Op(OT.IF, 3),
         Op(OT.PUSH_INT, 2),
-        Op(OT.ELSE),
+        Op(OT.ELSE, 5),
         Op(OT.PUSH_INT, 3),
         Op(OT.END),
     ], s)
     assert s.pop() == 3
 
-
-# TODO
-# @test
-# def it_should_print_five_times():
-#     s = Stack()
-#     simulate([
-#         Op(OT.PUSH_INT, 5),
-#         Op(OT.WHILE),
-#         Op(OT.DUP),
-#         Op(OT.DO),
-#         Op(OT.PUSH_STR, "should print five times\n"),
-#         Op(OT.PRINT_STR),
-#         Op(OT.PUSH_INT, 1),
-#         Op(OT.SUB),
-#         Op(OT.END),
-#     ], s)
-#     assert s.pop() == 3
+@test
+def it_should_print_five_times():
+    s = Stack()
+    simulate([
+        Op(OT.PUSH_INT, 5),
+        Op(OT.WHILE),
+        Op(OT.DUP),
+        Op(OT.DO, 8),
+        Op(OT.PUSH_STR, "should print five times\n"),
+        Op(OT.PRINT_STR),
+        Op(OT.PUSH_INT, 1),
+        Op(OT.SUB),
+        Op(OT.END, 1),
+    ], s)
+    assert s.pop() == 0

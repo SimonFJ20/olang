@@ -1,5 +1,5 @@
 from typing import List
-from projutils import test
+from utilities import test
 
 def chop_words(text: str) -> List[str]:
     words: List[str] = []
@@ -26,47 +26,6 @@ def chop_words(text: str) -> List[str]:
         words.append(word)
     return words
     
-
-# def chop_words(text: str) -> List[str]:
-#     while text.find("  ") != -1:
-#         text = text.replace("  ", " ")
-#     res = []
-#     isIn = False
-#     for i in text.split(" "):
-#         if i.find('"') != -1 and i.find('"') != 0 and i.find('"') != len(i)-1:
-#             raise Exception("fuck dig")
-#         elif i.startswith('"'):
-#             isIn = True
-#             res.append(i)
-#         elif isIn:
-#             res[len(res)-1] += " " + i
-#         elif i.replace(" ", "").replace('\n', '').replace('\t', '') != "":
-#             res.append(i.replace('\n', '').replace('\t', ''))
-#         if i.endswith('"'):
-#             isIn = False
-#     return res
-
-
-# def chop_words(text: str) -> List[str]:
-#     text = text.replace("\n", ' ').replace('\t', ' ')
-#     while text.find("  ") != -1:
-#         text = text.replace("  ", " ")
-#     res = []
-#     isIn = False
-#     for i in text.split(" "):
-#         if i.find('"') != -1 and i.find('"') != 0 and i.find('"') != len(i)-1:
-#             raise Exception("fuck dig")
-#         elif i.startswith('"'):
-#             isIn = True
-#             res.append(i)
-#         elif isIn:
-#             res[len(res)-1] += " " + i
-#         elif i.replace(" ", "").replace('\n', '').replace('\t', '') != "":
-#             res.append(i.replace('\n', '').replace('\t', ''))
-#         if i.endswith('"'):
-#             isIn = False
-#     return res
-
 
 @test
 def it_should_return_empty_list():

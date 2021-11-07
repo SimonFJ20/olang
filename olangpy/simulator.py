@@ -1,6 +1,6 @@
 from typing import List
-from op_maker import Op, OT
-from projutils import test
+from parser import Op, OT
+from utilities import test
 from stack import Stack
 
 def simulate(ops: List[Op], stack: Stack = Stack(), strings: List[str] = []):

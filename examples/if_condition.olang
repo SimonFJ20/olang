@@ -1,0 +1,8 @@
+
+3
+
+dup 5 == if
+    "They are equal\n" print_str
+else
+    "They are not equal\n" print_str
+end

@@ -1,6 +1,5 @@
-from projutils import test
+from utilities import test
 from random import randint
-
 
 class Stack():
     def __init__(self) -> None:
@@ -21,19 +20,6 @@ class Stack():
             v = self.stack[self.index]
             self.index -= 1
             return v
-
-# class MockStack(Stack):
-#     def __init__(self) -> None:
-#         self.push_calls = 0
-#         self.pop_calls = 0
-
-#     def push(self, v: int):
-#         self.push_calls += 1
-#         return super().push(v)
-
-#     def pop(self) -> int:
-#         self.pop_calls += 1
-#         return super().pop()
 
 @test
 def it_should_return_value():

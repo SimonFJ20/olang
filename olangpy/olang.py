@@ -1,9 +1,9 @@
 from sys import argv
 from crosrefs import cross_reference
-from op_maker import parse
-from projutils import run_tests
-from smualtor import simulate
-from word_choppa import chop_words
+from parser import parse
+from utilities import run_tests
+from simulator import simulate
+from lexer import chop_words
 
 
 if __name__ == '__main__':

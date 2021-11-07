@@ -1,5 +1,5 @@
 from typing import List
-from projutils import iota, test
+from utilities import iota, test
 from enum import Enum
 from re import match
 import random

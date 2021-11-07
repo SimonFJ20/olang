@@ -1,0 +1,26 @@
+
+"Bottom [1, 2] Top\n" print_str
+
+1 dup
+
+"'dup'\topertion turns [1] into [" print_str
+print_int ", " print_str print_int "]\n" print_str
+
+
+1 2 swap
+
+"'swap'\topertion turns [1, 2] into [" print_str
+print_int ", " print_str print_int "]\n" print_str
+
+
+1 2 over
+
+"'over'\topertion turns [1, 2] into [" print_str
+print_int ", " print_str print_int ", " print_str print_int "]\n" print_str
+
+
+1 2 3 rot
+
+"'rot'\topertion turns [1, 2, 3] into [" print_str
+print_int ", " print_str print_int ", " print_str print_int "]\n" print_str
+

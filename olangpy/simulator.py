@@ -36,6 +36,19 @@ def simulate(ops: List[Op], stack: Stack = Stack(), strings: List[str] = []):
             v2 = stack.pop()
             stack.push(v1)
             stack.push(v2)
+        elif o.t == OT.OVER:
+            a = stack.pop()
+            b = stack.pop()
+            stack.push(b)
+            stack.push(a)
+            stack.push(b)
+        elif o.t == OT.ROT:
+            a = stack.pop()
+            b = stack.pop()
+            c = stack.pop()
+            stack.push(b)
+            stack.push(a)
+            stack.push(c)
         elif o.t == OT.ADD:
             v1 = stack.pop()
             v2 = stack.pop()
@@ -178,6 +191,27 @@ def it_should_swap_the_two_top_values():
         Op(OT.SWAP),
     ], s)
     assert s.pop() == 5 and s.pop() == 3
+
+@test
+def it_should_copy_2nc_item_to_top():
+    s = Stack()
+    simulate([
+        Op(OT.PUSH_INT, 5),
+        Op(OT.PUSH_INT, 3),
+        Op(OT.OVER),
+    ], s)
+    assert s.pop() == 5 and s.pop() == 3 and s.pop() == 5
+
+@test
+def it_should_move_3rd_item_to_top():
+    s = Stack()
+    simulate([
+        Op(OT.PUSH_INT, 4),
+        Op(OT.PUSH_INT, 5),
+        Op(OT.PUSH_INT, 6),
+        Op(OT.ROT),
+    ], s)
+    assert s.pop() == 4
 
 @test
 def it_should_execute_if_correctly():

@@ -1,10 +1,10 @@
-from typing import List
+from typing import List, Optional
 from parser import OT, Op
 from utilities import test
 
 
 def cross_refernce_end(ops: List[Op]) -> None:
-    stack = []
+    stack: List[Optional[int]] = []
     for i in range(len(ops)):
         if ops[i].t == OT.IF:
             stack.append(None)

@@ -85,7 +85,7 @@ def simulate(ops: List[Op], stack: List[int] = [], strings: List[str] = []):
         elif o.t == OT.PROC:
             i = o.v
         elif o.t == OT.END:
-            if ops[o.v].t == OT.PROC:
+            if type(o.v) == int and ops[o.v].t == OT.PROC:
                 i = stack.pop()
             elif o.v:
                 i = o.v

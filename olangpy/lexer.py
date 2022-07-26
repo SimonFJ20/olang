@@ -1,3 +1,5 @@
+from os import scandir
+from tokenize import tokenize
 from typing import List
 from utilities import test
 
@@ -6,22 +8,23 @@ def chop_words(text: str) -> List[str]:
     word = ''
     is_string = False
     was_string = False
-    for c in text:
+    for i in range(len(text)):
+        c = text[i]
         if c in ' \t\n' and not is_string:
             if word != '':
                 words.append(word)
                 word = ''
                 was_string = False
         else:
-            if c == '"':
+            if c == '"' and text[i - 1] != '\\':
                 if is_string:
                     was_string = True
                 is_string = not is_string
             elif was_string:
-                raise Exception()
+                raise Exception(f'malformed string ({word})')
             word += c
     if is_string:
-        raise Exception()
+        raise Exception(f'malformed string ({word})')
     if word != '':
         words.append(word)
     return words
@@ -98,4 +101,20 @@ def it_should_conserve_whitespace_in_strings():
     i = '"\ttabbed in\non new line"'
     o = ['"\ttabbed in\non new line"']
     assert chop_words(i) == o
+
+@test
+def should_recognize_broken_strings1():
+    try:
+        res = tokenize('""djiawdjwadia fuck dig""')
+        assert False, "did not throw error"
+    except Exception as e:
+        assert not isinstance(e, AssertionError)
+
+@test
+def should_recognize_broken_strings2():
+    try:
+        res = tokenize('"h"djiawdjwadia fuck dig""')
+        assert False, "did not throw error"
+    except Exception as e:
+        assert not isinstance(e, AssertionError)
 

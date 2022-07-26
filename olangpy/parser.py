@@ -40,20 +40,6 @@ class Op:
         self.t = t
         self.v = v
 
-def handle_escaped_double_quotes(w: str) -> str:
-    i = 0
-    while i < len(w):
-        if w[i] == '"':
-            if i == 0 or i == len(w)-1:
-                pass
-            elif w[i-1] == '\\':
-                w = w[:i-1] + w[i:]
-            else:
-                raise Exception(f"borked string {w}")
-        i += 1
-        
-    return w
-
 def parse(words: List[str]) -> List[Op]:
     ops: List[Op] = []
     for w in words:
@@ -67,7 +53,6 @@ def parse(words: List[str]) -> List[Op]:
             w = w.replace('\\n', '\n', -1)
             w = w.replace('\\t', '\t', -1)
             w = w.replace('\\"', '"', -1)
-            w = handle_escaped_double_quotes(w)
             ops.append(Op(OT.PUSH_STR, w[1:-1]))
         elif w == 'pop_str':
             ops.append(Op(OT.POP_STR))
@@ -163,22 +148,6 @@ def should_return_mod():
 def should_NOT_just_return_add():
     res = parse(["5", "20", "+"])
     assert (res[0].v == 5 and res[1].v == 20 and res[2].t == OT.ADD)
-
-@test
-def should_recognize_broken_strings1():
-    try:
-        res = parse(['""djiawdjwadia fuck dig"', '"'])
-        assert False, "did not throw error"
-    except Exception as e:
-        assert not isinstance(e, AssertionError)
-
-@test
-def should_recognize_broken_strings2():
-    try:
-        res = parse(['"h"djiawdjwadia fuck dig"', '"'])
-        assert False, "did not throw error"
-    except Exception as e:
-        assert not isinstance(e, AssertionError)
 
 @test
 def should_allow_escaped_strings():

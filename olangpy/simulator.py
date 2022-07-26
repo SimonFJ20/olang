@@ -7,6 +7,8 @@ def simulate(ops: List[Op], stack: List[int] = [], strings: List[str] = []):
     procs = link_procs(ops)
     i = 0
     while i < len(ops):
+        # print(stack)
+        # print(f"running op[{i}] ({ops[i].t}: '{ops[i].v}')")
         o = ops[i]
         if o.t == OT.PUSH_INT:
             stack.append(ops[i].v)
@@ -83,10 +85,10 @@ def simulate(ops: List[Op], stack: List[int] = [], strings: List[str] = []):
         elif o.t == OT.PROC:
             i = o.v
         elif o.t == OT.END:
-            if o.v:
-                i = o.v
-            elif ops[o.v].t == OT.PROC:
+            if ops[o.v].t == OT.PROC:
                 i = stack.pop()
+            elif o.v:
+                i = o.v
         elif o.t == OT.CMP_EE:
             stack.append(1 if stack.pop() == stack.pop() else 0)
         elif o.t == OT.CMP_NE:
@@ -113,7 +115,7 @@ def link_procs(ops: List[Op]) -> Dict[str, int]:
         if ops[i].t == OT.PROC:
             if len(ops) <= i + 1:
                 raise Exception("expected procedure name") 
-            procs[ops[i + 1].v] = i
+            procs[ops[i + 1].v] = i + 1
     return procs
 
 @test

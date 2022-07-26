@@ -1,0 +1,10 @@
+
+proc outer
+    proc inner
+        " " print_str
+    end
+
+    "hello" print_str inner
+end
+
+outer "world\n" print_str

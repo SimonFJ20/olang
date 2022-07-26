@@ -131,7 +131,7 @@ def should_NOT_just_return_add():
     assert (res[0].v == 5 and res[1].v == 20 and res[2].t == OT.ADD)
 
 @test
-def should_recognize_broken_strings():
+def should_recognize_broken_strings1():
     try:
         res = parse(['""djiawdjwadia fuck dig"', '"'])
         assert False, "did not throw error"
@@ -139,7 +139,7 @@ def should_recognize_broken_strings():
         assert not isinstance(e, AssertionError)
 
 @test
-def should_recognize_broken_strings():
+def should_recognize_broken_strings2():
     try:
         res = parse(['"h"djiawdjwadia fuck dig"', '"'])
         assert False, "did not throw error"

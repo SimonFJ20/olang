@@ -78,7 +78,7 @@ def it_should_chop_newline_and_tab_seperated_words():
     assert chop_words(i) == o
 
 @test
-def it_should_complain_about_syntax():
+def it_should_complain_about_syntax1():
     try:
         chop_words('dsa"my string"sd')
         assert False, "didnt throw"
@@ -86,7 +86,7 @@ def it_should_complain_about_syntax():
         assert not isinstance(e, AssertionError)
 
 @test
-def it_should_complain_about_syntax():
+def it_should_complain_about_syntax2():
     try:
         chop_words('"my str')
         assert False, "didnt throw"

@@ -90,7 +90,7 @@ def it_should_have_pushed_value():
     assert s[0] == 5
 
 @test
-def it_should_do_calculation():
+def it_should_do_calculation1():
     s = []
     simulate([
         Op(OT.PUSH_INT, 3),
@@ -100,7 +100,7 @@ def it_should_do_calculation():
     assert s[0] == 7
 
 @test
-def it_should_do_calculation():
+def it_should_do_calculation2():
     s = []
     simulate([
         Op(OT.PUSH_INT, 3),
@@ -213,7 +213,7 @@ def it_should_move_3rd_item_to_top():
     assert s.pop() == 4
 
 @test
-def it_should_execute_if_correctly():
+def it_should_execute_if_correctly1():
     s = []
     simulate([
         Op(OT.PUSH_INT, 1),
@@ -226,7 +226,7 @@ def it_should_execute_if_correctly():
     assert s.pop() == 2
 
 @test
-def it_should_execute_if_correctly():
+def it_should_execute_if_correctly2():
     s = []
     simulate([
         Op(OT.PUSH_INT, 0),
@@ -273,13 +273,13 @@ def it_should_pop_two_and_push_one():
 # ==
 
 @test
-def it_should_be_false():
+def it_should_be_false1():
     s = []
     simulate([Op(OT.PUSH_INT, 4), Op(OT.PUSH_INT, 8), Op(OT.CMP_EE)], s)
     assert s.pop() == 0
 
 @test
-def it_should_be_true():
+def it_should_be_true1():
     s = []
     simulate([Op(OT.PUSH_INT, 8), Op(OT.PUSH_INT, 8), Op(OT.CMP_EE)], s)
     assert s.pop() == 1
@@ -287,13 +287,13 @@ def it_should_be_true():
 # !=
 
 @test
-def it_should_be_false():
+def it_should_be_false2():
     s = []
     simulate([Op(OT.PUSH_INT, 8), Op(OT.PUSH_INT, 8), Op(OT.CMP_NE)], s)
     assert s.pop() == 0
 
 @test
-def it_should_be_true():
+def it_should_be_true2():
     s = []
     simulate([Op(OT.PUSH_INT, 4), Op(OT.PUSH_INT, 8), Op(OT.CMP_NE)], s)
     assert s.pop() == 1
@@ -301,19 +301,19 @@ def it_should_be_true():
 # <
 
 @test
-def it_should_be_false():
+def it_should_be_false3():
     s = []
     simulate([Op(OT.PUSH_INT, 8), Op(OT.PUSH_INT, 4), Op(OT.CMP_LT)], s)
     assert s.pop() == 0
 
 @test
-def it_should_be_false():
+def it_should_be_false4():
     s = []
     simulate([Op(OT.PUSH_INT, 4), Op(OT.PUSH_INT, 4), Op(OT.CMP_LT)], s)
     assert s.pop() == 0
 
 @test
-def it_should_be_true():
+def it_should_be_true3():
     s = []
     simulate([Op(OT.PUSH_INT, 4), Op(OT.PUSH_INT, 8), Op(OT.CMP_LT)], s)
     assert s.pop() == 1
@@ -321,19 +321,19 @@ def it_should_be_true():
 # >
 
 @test
-def it_should_be_false():
+def it_should_be_false5():
     s = []
     simulate([Op(OT.PUSH_INT, 4), Op(OT.PUSH_INT, 8), Op(OT.CMP_GT)], s)
     assert s.pop() == 0
 
 @test
-def it_should_be_false():
+def it_should_be_false6():
     s = []
     simulate([Op(OT.PUSH_INT, 4), Op(OT.PUSH_INT, 4), Op(OT.CMP_GT)], s)
     assert s.pop() == 0
 
 @test
-def it_should_be_true():
+def it_should_be_true4():
     s = []
     simulate([Op(OT.PUSH_INT, 8), Op(OT.PUSH_INT, 4), Op(OT.CMP_GT)], s)
     assert s.pop() == 1
@@ -341,19 +341,19 @@ def it_should_be_true():
 # <=
 
 @test
-def it_should_be_false():
+def it_should_be_false7():
     s = []
     simulate([Op(OT.PUSH_INT, 8), Op(OT.PUSH_INT, 4), Op(OT.CMP_LTE)], s)
     assert s.pop() == 0
 
 @test
-def it_should_be_true():
+def it_should_be_true5():
     s = []
     simulate([Op(OT.PUSH_INT, 4), Op(OT.PUSH_INT, 4), Op(OT.CMP_LTE)], s)
     assert s.pop() == 1
 
 @test
-def it_should_be_true():
+def it_should_be_true6():
     s = []
     simulate([Op(OT.PUSH_INT, 4), Op(OT.PUSH_INT, 8), Op(OT.CMP_LTE)], s)
     assert s.pop() == 1
@@ -361,19 +361,19 @@ def it_should_be_true():
 # >=
 
 @test
-def it_should_be_false():
+def it_should_be_false8():
     s = []
     simulate([Op(OT.PUSH_INT, 4), Op(OT.PUSH_INT, 8), Op(OT.CMP_GTE)], s)
     assert s.pop() == 0
 
 @test
-def it_should_be_true():
+def it_should_be_true7():
     s = []
     simulate([Op(OT.PUSH_INT, 4), Op(OT.PUSH_INT, 4), Op(OT.CMP_GTE)], s)
     assert s.pop() == 1
 
 @test
-def it_should_be_true():
+def it_should_be_true8():
     s = []
     simulate([Op(OT.PUSH_INT, 8), Op(OT.PUSH_INT, 4), Op(OT.CMP_GTE)], s)
     assert s.pop() == 1

@@ -1,7 +1,9 @@
 from os import system
+from types import FunctionType
+from typing import List
 
 
-TESTS = []
+TESTS: List[FunctionType] = []
 def test(f):
     global TESTS
     TESTS.append(f)

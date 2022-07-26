@@ -64,7 +64,9 @@ def parse(words: List[str]) -> List[Op]:
         elif w == 'print_int':
             ops.append(Op(OT.PRINT_INT))
         elif w.startswith('"') and w.endswith('"'):
-            w = w.replace('\\n', '\n', -1).replace('\\t', '\t', -1)
+            w = w.replace('\\n', '\n', -1)
+            w = w.replace('\\t', '\t', -1)
+            w = w.replace('\\"', '"', -1)
             w = handle_escaped_double_quotes(w)
             ops.append(Op(OT.PUSH_STR, w[1:-1]))
         elif w == 'pop_str':

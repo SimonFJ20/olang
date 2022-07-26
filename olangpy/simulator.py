@@ -56,6 +56,18 @@ def simulate(ops: List[Op], stack: List[int] = [], strings: List[str] = []):
             v1 = stack.pop()
             v2 = stack.pop()
             stack.append(v2 - v1)
+        elif o.t == OT.MUL:
+            v1 = stack.pop()
+            v2 = stack.pop()
+            stack.append(v2 * v1)
+        elif o.t == OT.DIV:
+            v1 = stack.pop()
+            v2 = stack.pop()
+            stack.append(int(v2 / v1))
+        elif o.t == OT.MOD:
+            v1 = stack.pop()
+            v2 = stack.pop()
+            stack.append(v2 % v1)
         elif o.t == OT.IF:
             if not stack.pop():
                 i = o.v
@@ -81,6 +93,8 @@ def simulate(ops: List[Op], stack: List[int] = [], strings: List[str] = []):
             stack.append(1 if stack.pop() >= stack.pop() else 0)
         elif o.t == OT.CMP_GTE:
             stack.append(1 if stack.pop() <= stack.pop() else 0)
+        else:
+            raise Exception(f'unrecognized operation: "{o.t}"')
         i += 1
 
 @test
@@ -90,7 +104,7 @@ def it_should_have_pushed_value():
     assert s[0] == 5
 
 @test
-def it_should_do_calculation1():
+def it_should_do_add_calculation():
     s = []
     simulate([
         Op(OT.PUSH_INT, 3),
@@ -100,7 +114,7 @@ def it_should_do_calculation1():
     assert s[0] == 7
 
 @test
-def it_should_do_calculation2():
+def it_should_do_sub_calculation():
     s = []
     simulate([
         Op(OT.PUSH_INT, 3),
@@ -108,6 +122,36 @@ def it_should_do_calculation2():
         Op(OT.SUB)
     ], s);
     assert s[0] == -1
+
+@test
+def it_should_do_mul_calculation():
+    s = []
+    simulate([
+        Op(OT.PUSH_INT, 3),
+        Op(OT.PUSH_INT, 4),
+        Op(OT.MUL)
+    ], s);
+    assert s[0] == 12
+
+@test
+def it_should_do_div_calculation():
+    s = []
+    simulate([
+        Op(OT.PUSH_INT, 4),
+        Op(OT.PUSH_INT, 2),
+        Op(OT.DIV)
+    ], s);
+    assert s[0] == 2
+
+@test
+def it_should_do_mod_calculation():
+    s = []
+    simulate([
+        Op(OT.PUSH_INT, 3),
+        Op(OT.PUSH_INT, 4),
+        Op(OT.MOD)
+    ], s);
+    assert s[0] == 3
 
 @test
 def it_should_handle_string_correctly():

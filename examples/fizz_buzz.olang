@@ -1,0 +1,14 @@
+
+1 while dup 100 < do
+    dup 15 % 0 == if
+        "FizzBuzz\n" print_str
+    else dup 3 % 0 == if
+        "Fizz\n" print_str
+    else dup 5 % 0 == if
+        "Buzz\n" print_str
+    else
+        dup print_int
+        "\n" print_str
+    end end end
+    1 +
+end

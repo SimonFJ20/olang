@@ -17,6 +17,9 @@ class OT(Enum):
     ROT         = iota()    # rot
     ADD         = iota()    # +
     SUB         = iota()    # -
+    MUL         = iota()    # *
+    DIV         = iota()    # /
+    MOD         = iota()    # %
     IF          = iota()    # if
     ELSE        = iota()    # else
     WHILE       = iota()    # while
@@ -77,6 +80,12 @@ def parse(words: List[str]) -> List[Op]:
             ops.append(Op(OT.ADD))
         elif w == '-':
             ops.append(Op(OT.SUB))
+        elif w == '*':
+            ops.append(Op(OT.MUL))
+        elif w == '/':
+            ops.append(Op(OT.DIV))
+        elif w == '%':
+            ops.append(Op(OT.MOD))
         elif w == 'if':
             ops.append(Op(OT.IF))
         elif w == 'else':
@@ -120,10 +129,28 @@ def should_be_same_length():
     assert len(res) == l
 
 @test
-def should_not_just_return_add():
+def should_return_sub():
     i = ['-']
     res = parse(i)
     assert res[0].t == OT.SUB
+
+@test
+def should_return_mul():
+    i = ['*']
+    res = parse(i)
+    assert res[0].t == OT.MUL
+
+@test
+def should_return_div():
+    i = ['/']
+    res = parse(i)
+    assert res[0].t == OT.DIV
+
+@test
+def should_return_mod():
+    i = ['%']
+    res = parse(i)
+    assert res[0].t == OT.MOD
 
 @test
 def should_NOT_just_return_add():

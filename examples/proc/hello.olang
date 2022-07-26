@@ -1,0 +1,6 @@
+
+proc hello
+    "hello world\n" print_str
+end
+
+hello

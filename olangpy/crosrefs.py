@@ -3,17 +3,19 @@ from parser import OT, Op
 from utilities import test
 
 
-def cross_refernce_end(ops: List[Op]) -> None:
+def cross_forward_refernces(ops: List[Op]) -> None:
     stack: List[Optional[int]] = []
     for i in range(len(ops)):
         if ops[i].t == OT.IF:
             stack.append(None)
         elif ops[i].t == OT.WHILE:
             stack.append(i)
+        elif ops[i].t == OT.PROC:
+            stack.append(i)
         elif ops[i].t == OT.END:
             ops[i].v = stack.pop()
 
-def cross_refernce_if_and_do(ops: List[Op]) -> None:
+def cross_backward_refernces(ops: List[Op]) -> None:
     stack = []
     for i in reversed(range(len(ops))):
         if ops[i].t == OT.END:
@@ -23,10 +25,12 @@ def cross_refernce_if_and_do(ops: List[Op]) -> None:
         elif ops[i].t == OT.ELSE:
             ops[i].v = stack.pop()
             stack.append(i)
+        elif ops[i].t == OT.PROC:
+            ops[i].v = stack.pop()
 
 def cross_reference(ops: List[Op]) -> None:
-    cross_refernce_end(ops)
-    cross_refernce_if_and_do(ops)
+    cross_forward_refernces(ops)
+    cross_backward_refernces(ops)
 
 @test
 def it_should_not_cross_ref_if_end():

@@ -1,0 +1,10 @@
+
+proc three
+    3 swap
+end
+
+three 3 +
+
+print_int
+
+"\n" print_str

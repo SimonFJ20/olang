@@ -1,8 +1,10 @@
-from typing import List
+from asyncio import constants
+from typing import Dict, List
 from parser import Op, OT
 from utilities import test
 
 def simulate(ops: List[Op], stack: List[int] = [], strings: List[str] = []):
+    procs = link_procs(ops)
     i = 0
     while i < len(ops):
         o = ops[i]
@@ -78,9 +80,13 @@ def simulate(ops: List[Op], stack: List[int] = [], strings: List[str] = []):
         elif o.t == OT.DO:
             if not stack.pop():
                 i = o.v
+        elif o.t == OT.PROC:
+            i = o.v
         elif o.t == OT.END:
             if o.v:
                 i = o.v
+            elif ops[o.v].t == OT.PROC:
+                i = stack.pop()
         elif o.t == OT.CMP_EE:
             stack.append(1 if stack.pop() == stack.pop() else 0)
         elif o.t == OT.CMP_NE:
@@ -93,9 +99,22 @@ def simulate(ops: List[Op], stack: List[int] = [], strings: List[str] = []):
             stack.append(1 if stack.pop() >= stack.pop() else 0)
         elif o.t == OT.CMP_GTE:
             stack.append(1 if stack.pop() <= stack.pop() else 0)
+        elif o.t == OT.CALL:
+            if ops[i - 1].t != OT.PROC:
+                stack.append(i)
+                i = procs[o.v]
         else:
             raise Exception(f'unrecognized operation: "{o.t}"')
         i += 1
+
+def link_procs(ops: List[Op]) -> Dict[str, int]:
+    procs: Dict[str, int] = {}
+    for i in range(len(ops)):
+        if ops[i].t == OT.PROC:
+            if len(ops) <= i + 1:
+                raise Exception("expected procedure name") 
+            procs[ops[i + 1].v] = i
+    return procs
 
 @test
 def it_should_have_pushed_value():

@@ -25,12 +25,15 @@ class OT(Enum):
     WHILE       = iota()    # while
     DO          = iota()    # do
     END         = iota()    # end
+    PROC        = iota()    # proc
+    RETURN      = iota()    # return
     CMP_EE      = iota()    # ==
     CMP_NE      = iota()    # !=
     CMP_LT      = iota()    # <
     CMP_GT      = iota()    # >
     CMP_LTE     = iota()    # <=
     CMP_GTE     = iota()    # >=
+    CALL        = iota()    # >=
 
 class Op:
     def __init__(self, t: OT, v = None):
@@ -94,6 +97,8 @@ def parse(words: List[str]) -> List[Op]:
             ops.append(Op(OT.WHILE))
         elif w == 'do':
             ops.append(Op(OT.DO))
+        elif w == 'proc':
+            ops.append(Op(OT.PROC))
         elif w == 'end':
             ops.append(Op(OT.END))
         elif w == '==':
@@ -109,7 +114,7 @@ def parse(words: List[str]) -> List[Op]:
         elif w == '>=':
             ops.append(Op(OT.CMP_GTE))
         else:
-            raise Exception(f'unrecognized operation: "{w}"')
+            ops.append(Op(OT.CALL, w))
     return ops
 
 
@@ -204,6 +209,10 @@ def should_return_do_op():
     assert parse(['do'])[0].t == OT.DO
 
 @test
+def should_return_proc_op():
+    assert parse(['proc'])[0].t == OT.PROC
+
+@test
 def should_return_end_op():
     assert parse(['end'])[0].t == OT.END
 
@@ -230,4 +239,13 @@ def should_return_lte_op():
 @test
 def should_return_gte_op():
     assert parse(['>='])[0].t == OT.CMP_GTE
+
+@test
+def should_return_call_op():
+    assert parse(['something_that_isn\'t_an_operation'])[0].t == OT.CALL
+
+@test
+def should_return_callee_name():
+    assert parse(['called_proc'])[0].v == "called_proc"
+
 

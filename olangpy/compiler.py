@@ -1,5 +1,5 @@
 from typing import List
-from lexer import Op, OT
+from parser import Op, OT
 from subprocess import call
 from os import remove
 

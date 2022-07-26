@@ -1,14 +1,13 @@
 from typing import List
 from parser import Op, OT
 from utilities import test
-from stack import Stack
 
-def simulate(ops: List[Op], stack: Stack = Stack(), strings: List[str] = []):
+def simulate(ops: List[Op], stack: List[int] = [], strings: List[str] = []):
     i = 0
     while i < len(ops):
         o = ops[i]
         if o.t == OT.PUSH_INT:
-            stack.push(ops[i].v)
+            stack.append(ops[i].v)
         elif o.t == OT.POP_INT:
             stack.pop()
         elif o.t == OT.PRINT_INT:
@@ -17,8 +16,8 @@ def simulate(ops: List[Op], stack: Stack = Stack(), strings: List[str] = []):
         elif o.t == OT.PUSH_STR:
             v = ops[i].v
             strings.append(v)
-            stack.push(len(v))
-            stack.push(len(strings) - 1)
+            stack.append(len(v))
+            stack.append(len(strings) - 1)
         elif o.t == OT.POP_STR:
             stack.pop()
             stack.pop()
@@ -29,34 +28,34 @@ def simulate(ops: List[Op], stack: Stack = Stack(), strings: List[str] = []):
             print(strings.pop(), end='', flush=True)  
         elif o.t == OT.DUP:
             v = stack.pop()
-            stack.push(v)
-            stack.push(v)
+            stack.append(v)
+            stack.append(v)
         elif o.t == OT.SWAP:
             v1 = stack.pop()
             v2 = stack.pop()
-            stack.push(v1)
-            stack.push(v2)
+            stack.append(v1)
+            stack.append(v2)
         elif o.t == OT.OVER:
             a = stack.pop()
             b = stack.pop()
-            stack.push(b)
-            stack.push(a)
-            stack.push(b)
+            stack.append(b)
+            stack.append(a)
+            stack.append(b)
         elif o.t == OT.ROT:
             a = stack.pop()
             b = stack.pop()
             c = stack.pop()
-            stack.push(b)
-            stack.push(a)
-            stack.push(c)
+            stack.append(b)
+            stack.append(a)
+            stack.append(c)
         elif o.t == OT.ADD:
             v1 = stack.pop()
             v2 = stack.pop()
-            stack.push(v1 + v2)
+            stack.append(v1 + v2)
         elif o.t == OT.SUB:
             v1 = stack.pop()
             v2 = stack.pop()
-            stack.push(v2 - v1)
+            stack.append(v2 - v1)
         elif o.t == OT.IF:
             if not stack.pop():
                 i = o.v
@@ -71,71 +70,71 @@ def simulate(ops: List[Op], stack: Stack = Stack(), strings: List[str] = []):
             if o.v:
                 i = o.v
         elif o.t == OT.CMP_EE:
-            stack.push(1 if stack.pop() == stack.pop() else 0)
+            stack.append(1 if stack.pop() == stack.pop() else 0)
         elif o.t == OT.CMP_NE:
-            stack.push(1 if stack.pop() != stack.pop() else 0)
+            stack.append(1 if stack.pop() != stack.pop() else 0)
         elif o.t == OT.CMP_LT:
-            stack.push(1 if stack.pop() > stack.pop() else 0)
+            stack.append(1 if stack.pop() > stack.pop() else 0)
         elif o.t == OT.CMP_GT:
-            stack.push(1 if stack.pop() < stack.pop() else 0)
+            stack.append(1 if stack.pop() < stack.pop() else 0)
         elif o.t == OT.CMP_LTE:
-            stack.push(1 if stack.pop() >= stack.pop() else 0)
+            stack.append(1 if stack.pop() >= stack.pop() else 0)
         elif o.t == OT.CMP_GTE:
-            stack.push(1 if stack.pop() <= stack.pop() else 0)
+            stack.append(1 if stack.pop() <= stack.pop() else 0)
         i += 1
 
 @test
 def it_should_have_pushed_value():
-    s = Stack()
+    s = []
     simulate([Op(OT.PUSH_INT, 5)], s)
-    assert s.stack[0] == 5
+    assert s[0] == 5
 
 @test
 def it_should_do_calculation():
-    s = Stack()
+    s = []
     simulate([
         Op(OT.PUSH_INT, 3),
         Op(OT.PUSH_INT, 4),
         Op(OT.ADD)
     ], s);
-    assert s.stack[0] == 7
+    assert s[0] == 7
 
 @test
 def it_should_do_calculation():
-    s = Stack()
+    s = []
     simulate([
         Op(OT.PUSH_INT, 3),
         Op(OT.PUSH_INT, 4),
         Op(OT.SUB)
     ], s);
-    assert s.stack[0] == -1
+    assert s[0] == -1
 
 @test
 def it_should_handle_string_correctly():
-    s = Stack()
+    s = []
     strings = []
     simulate([
         Op(OT.PUSH_STR, 'hello world')
     ], s, strings)
-    assert s.stack[0] == 11
-    assert s.stack[1] == 0
+    assert s[0] == 11
+    assert s[1] == 0
     assert strings[0] == 'hello world'
 
 @test
 def it_should_handle_string_popping_correctly():
-    s = Stack()
+    s = []
     strings = []
     simulate([
         Op(OT.PUSH_STR, 'hello world'),
         Op(OT.POP_STR),
         Op(OT.PUSH_INT, 6)
     ], s, strings)
-    assert s.stack[0] == 6
+    assert s[0] == 6
 
 
 @test
 def it_should_not_do_memory_leaky_leaky():
-    s = Stack()
+    s = []
     strings = []
     simulate([
         Op(OT.PUSH_STR, 'hello world'),
@@ -145,7 +144,7 @@ def it_should_not_do_memory_leaky_leaky():
 
 @test
 def it_should_pop_pushed_values():
-    s = Stack()
+    s = []
     simulate([
         Op(OT.PUSH_INT, 7),
         Op(OT.POP_INT),  
@@ -155,7 +154,7 @@ def it_should_pop_pushed_values():
 
 @test
 def it_should_pop_when_printing_int():
-    s = Stack()
+    s = []
     simulate([
         Op(OT.PUSH_INT, 3),
         Op(OT.PUSH_INT, 7),
@@ -165,7 +164,7 @@ def it_should_pop_when_printing_int():
 
 @test
 def it_should_pop_when_printing_str():
-    s = Stack()
+    s = []
     simulate([
         Op(OT.PUSH_STR, "ajf"),
         Op(OT.PUSH_STR, "lets goooooo"),
@@ -175,7 +174,7 @@ def it_should_pop_when_printing_str():
 
 @test
 def it_should_duplicate_value():
-    s = Stack()
+    s = []
     simulate([
         Op(OT.PUSH_INT, 5),
         Op(OT.DUP),
@@ -184,7 +183,7 @@ def it_should_duplicate_value():
 
 @test
 def it_should_swap_the_two_top_values():
-    s = Stack()
+    s = []
     simulate([
         Op(OT.PUSH_INT, 5),
         Op(OT.PUSH_INT, 3),
@@ -194,7 +193,7 @@ def it_should_swap_the_two_top_values():
 
 @test
 def it_should_copy_2nc_item_to_top():
-    s = Stack()
+    s = []
     simulate([
         Op(OT.PUSH_INT, 5),
         Op(OT.PUSH_INT, 3),
@@ -204,7 +203,7 @@ def it_should_copy_2nc_item_to_top():
 
 @test
 def it_should_move_3rd_item_to_top():
-    s = Stack()
+    s = []
     simulate([
         Op(OT.PUSH_INT, 4),
         Op(OT.PUSH_INT, 5),
@@ -215,7 +214,7 @@ def it_should_move_3rd_item_to_top():
 
 @test
 def it_should_execute_if_correctly():
-    s = Stack()
+    s = []
     simulate([
         Op(OT.PUSH_INT, 1),
         Op(OT.IF, 3),
@@ -228,7 +227,7 @@ def it_should_execute_if_correctly():
 
 @test
 def it_should_execute_if_correctly():
-    s = Stack()
+    s = []
     simulate([
         Op(OT.PUSH_INT, 0),
         Op(OT.IF, 3),
@@ -241,7 +240,7 @@ def it_should_execute_if_correctly():
 
 @test
 def it_should_print_five_times():
-    s = Stack()
+    s = []
     simulate([
         Op(OT.PUSH_INT, 5),
         Op(OT.WHILE),
@@ -259,7 +258,7 @@ def it_should_print_five_times():
 def it_should_pop_two_and_push_one():
     correct = True
     for i in [OT.CMP_EE, OT.CMP_NE, OT.CMP_LT, OT.CMP_GT, OT.CMP_LTE, OT.CMP_GTE]:
-        s = Stack()
+        s = []
         simulate([
             Op(OT.PUSH_INT, 69),
             Op(OT.PUSH_INT, 0),
@@ -275,13 +274,13 @@ def it_should_pop_two_and_push_one():
 
 @test
 def it_should_be_false():
-    s = Stack()
+    s = []
     simulate([Op(OT.PUSH_INT, 4), Op(OT.PUSH_INT, 8), Op(OT.CMP_EE)], s)
     assert s.pop() == 0
 
 @test
 def it_should_be_true():
-    s = Stack()
+    s = []
     simulate([Op(OT.PUSH_INT, 8), Op(OT.PUSH_INT, 8), Op(OT.CMP_EE)], s)
     assert s.pop() == 1
 
@@ -289,13 +288,13 @@ def it_should_be_true():
 
 @test
 def it_should_be_false():
-    s = Stack()
+    s = []
     simulate([Op(OT.PUSH_INT, 8), Op(OT.PUSH_INT, 8), Op(OT.CMP_NE)], s)
     assert s.pop() == 0
 
 @test
 def it_should_be_true():
-    s = Stack()
+    s = []
     simulate([Op(OT.PUSH_INT, 4), Op(OT.PUSH_INT, 8), Op(OT.CMP_NE)], s)
     assert s.pop() == 1
 
@@ -303,19 +302,19 @@ def it_should_be_true():
 
 @test
 def it_should_be_false():
-    s = Stack()
+    s = []
     simulate([Op(OT.PUSH_INT, 8), Op(OT.PUSH_INT, 4), Op(OT.CMP_LT)], s)
     assert s.pop() == 0
 
 @test
 def it_should_be_false():
-    s = Stack()
+    s = []
     simulate([Op(OT.PUSH_INT, 4), Op(OT.PUSH_INT, 4), Op(OT.CMP_LT)], s)
     assert s.pop() == 0
 
 @test
 def it_should_be_true():
-    s = Stack()
+    s = []
     simulate([Op(OT.PUSH_INT, 4), Op(OT.PUSH_INT, 8), Op(OT.CMP_LT)], s)
     assert s.pop() == 1
 
@@ -323,19 +322,19 @@ def it_should_be_true():
 
 @test
 def it_should_be_false():
-    s = Stack()
+    s = []
     simulate([Op(OT.PUSH_INT, 4), Op(OT.PUSH_INT, 8), Op(OT.CMP_GT)], s)
     assert s.pop() == 0
 
 @test
 def it_should_be_false():
-    s = Stack()
+    s = []
     simulate([Op(OT.PUSH_INT, 4), Op(OT.PUSH_INT, 4), Op(OT.CMP_GT)], s)
     assert s.pop() == 0
 
 @test
 def it_should_be_true():
-    s = Stack()
+    s = []
     simulate([Op(OT.PUSH_INT, 8), Op(OT.PUSH_INT, 4), Op(OT.CMP_GT)], s)
     assert s.pop() == 1
 
@@ -343,19 +342,19 @@ def it_should_be_true():
 
 @test
 def it_should_be_false():
-    s = Stack()
+    s = []
     simulate([Op(OT.PUSH_INT, 8), Op(OT.PUSH_INT, 4), Op(OT.CMP_LTE)], s)
     assert s.pop() == 0
 
 @test
 def it_should_be_true():
-    s = Stack()
+    s = []
     simulate([Op(OT.PUSH_INT, 4), Op(OT.PUSH_INT, 4), Op(OT.CMP_LTE)], s)
     assert s.pop() == 1
 
 @test
 def it_should_be_true():
-    s = Stack()
+    s = []
     simulate([Op(OT.PUSH_INT, 4), Op(OT.PUSH_INT, 8), Op(OT.CMP_LTE)], s)
     assert s.pop() == 1
 
@@ -363,19 +362,19 @@ def it_should_be_true():
 
 @test
 def it_should_be_false():
-    s = Stack()
+    s = []
     simulate([Op(OT.PUSH_INT, 4), Op(OT.PUSH_INT, 8), Op(OT.CMP_GTE)], s)
     assert s.pop() == 0
 
 @test
 def it_should_be_true():
-    s = Stack()
+    s = []
     simulate([Op(OT.PUSH_INT, 4), Op(OT.PUSH_INT, 4), Op(OT.CMP_GTE)], s)
     assert s.pop() == 1
 
 @test
 def it_should_be_true():
-    s = Stack()
+    s = []
     simulate([Op(OT.PUSH_INT, 8), Op(OT.PUSH_INT, 4), Op(OT.CMP_GTE)], s)
     assert s.pop() == 1
 
